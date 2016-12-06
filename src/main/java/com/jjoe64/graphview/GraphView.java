@@ -20,8 +20,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -209,6 +209,9 @@ public class GraphView extends View {
         mTapDetector = new TapDetector();
 
         loadStyles();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
     }
 
     /**
@@ -285,14 +288,16 @@ public class GraphView extends View {
      */
     protected void drawGraphElements(Canvas canvas) {
         // must be in hardware accelerated mode
+        /*
         if (android.os.Build.VERSION.SDK_INT >= 11 && !canvas.isHardwareAccelerated()) {
             throw new IllegalStateException("GraphView must be used in hardware accelerated mode." +
                     "You can use android:hardwareAccelerated=\"true\" on your activity. Read this for more info:" +
                     "https://developer.android.com/guide/topics/graphics/hardware-accel.html");
-        }
+        }*/
 
         drawTitle(canvas);
         mViewport.drawFirst(canvas);
+
         mGridLabelRenderer.draw(canvas);
         for (Series s : mSeries) {
             s.draw(this, canvas, false);
